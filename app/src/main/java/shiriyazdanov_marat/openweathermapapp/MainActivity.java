@@ -7,22 +7,15 @@ import android.view.MenuItem;
 
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import shiriyazdanov_marat.openweathermapapp.api.WeatherApi;
 
 
 public class MainActivity extends Activity {
-    WeatherApi api;
-    Retrofit retrofit;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        retrofit = new Retrofit.Builder()
-                .baseUrl("http://api.openweathermap.org/data/2.5/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        api = retrofit.create(WeatherApi.class);
     }
 
 
