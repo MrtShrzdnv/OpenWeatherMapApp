@@ -47,7 +47,7 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
         holder.cityName.setText(mDataSet.get(position).getName());
         holder.temp.setText(String.valueOf(mDataSet.get(position).getMainData().getTemp()));
         holder.speed.setText(String.valueOf(mDataSet.get(position).getWindData().getSpeed()));
-        holder.speed.setText(String.valueOf(mDataSet.get(position).getWindData().getDeg()));
+        holder.deg.setText(String.valueOf(mDataSet.get(position).getWindData().getDeg()));
     }
 
     @Override

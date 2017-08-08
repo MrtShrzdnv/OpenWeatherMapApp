@@ -16,6 +16,11 @@ public class Wind {
     @Expose
     private Integer deg;
 
+    public Wind(Double s, int d){
+        speed = s;
+        deg = d;
+    }
+
     public Double getSpeed() {
         return speed;
     }

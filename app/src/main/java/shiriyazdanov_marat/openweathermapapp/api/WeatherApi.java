@@ -14,7 +14,7 @@ public interface WeatherApi {
     String KEY = "474b17b7b30d0bace07c1d74ac4f17d3";
     @GET("weather")
     Call<CurrentWeatherModel> getData(
-            @Query("city name") String cityName,
+            @Query("q") String cityName,
             @Query("units") String units, // "metric"
             @Query("appid") String appid
     );

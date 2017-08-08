@@ -1,9 +1,11 @@
 package shiriyazdanov_marat.openweathermapapp.service;
 
+import android.util.Log;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
-import shiriyazdanov_marat.openweathermapapp.WeatherApp;
+import shiriyazdanov_marat.openweathermapapp.App;
 import shiriyazdanov_marat.openweathermapapp.api.WeatherApi;
 import shiriyazdanov_marat.openweathermapapp.entity.CurrentWeatherModel;
 
@@ -12,14 +14,15 @@ import shiriyazdanov_marat.openweathermapapp.entity.CurrentWeatherModel;
  */
 
 public class CurrentWeatherService {
-    private WeatherApi api = WeatherApp.getWeatherApi();
+    //private WeatherApi api;
     private CurrentWeatherModel result = null;
 
     public CurrentWeatherService (){
     }
 
+
     public CurrentWeatherModel getData(String cityName, String units, String appid){
-        api.getData(cityName,units,appid).enqueue(new Callback<CurrentWeatherModel>(){
+        App.getWeatherApi().getData(cityName,units,appid).enqueue(new Callback<CurrentWeatherModel>(){
 
             @Override
             public void onResponse(Call<CurrentWeatherModel> call, Response<CurrentWeatherModel> response) {
@@ -28,7 +31,8 @@ public class CurrentWeatherService {
 
             @Override
             public void onFailure(Call<CurrentWeatherModel> call, Throwable t) {
-
+                Log.d("TAG", "FAIL");
+                t.getMessage();
             }
         });
         return result;

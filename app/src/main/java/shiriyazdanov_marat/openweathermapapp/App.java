@@ -10,8 +10,9 @@ import shiriyazdanov_marat.openweathermapapp.api.WeatherApi;
  * Created by Marat_2 on 05.08.2017.
  */
 
-public class WeatherApp extends Application {
+public class App extends Application {
     private static WeatherApi api;
+    private Retrofit retrofit;
 
     @Override
     public void onCreate() {
@@ -20,7 +21,7 @@ public class WeatherApp extends Application {
     }
 
     private void initApi(){
-        Retrofit retrofit = new Retrofit.Builder()
+        retrofit = new Retrofit.Builder()
                 .baseUrl(WeatherApi.WEATHER_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();

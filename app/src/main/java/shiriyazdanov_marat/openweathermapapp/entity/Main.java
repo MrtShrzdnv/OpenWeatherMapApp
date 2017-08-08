@@ -14,6 +14,10 @@ public class Main {
     @Expose
     private Double temp;
 
+    public Main(Double t){
+        temp = t;
+    }
+
     public Double getTemp() {
         return temp;
     }

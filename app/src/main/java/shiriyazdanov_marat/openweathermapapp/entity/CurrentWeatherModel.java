@@ -14,6 +14,12 @@ public class CurrentWeatherModel {
     @SerializedName("name")
     private String name;
 
+    public CurrentWeatherModel(Main m, Wind w, String n){
+        mainData = m;
+        windData = w;
+        name = n;
+    }
+
     public Main getMainData() {
         return mainData;
     }
