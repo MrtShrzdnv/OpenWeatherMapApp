@@ -1,6 +1,7 @@
 package shiriyazdanov_marat.openweathermapapp;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,34 +44,14 @@ public class MainActivity extends Activity {
         WeatherAdapter adapter = new WeatherAdapter(list);
         recyclerView.setAdapter(adapter);
 
-        model = service.getData("London","metric", WeatherApi.KEY);
-        //model = new CurrentWeatherModel(new Main(25.0), new Wind(2.0, 4), "Gorod");
-/*
-        WeatherApp.getWeatherApi().getData("Kazan","metric",WeatherApi.KEY).enqueue(new Callback<CurrentWeatherModel>(){
+/*        model = service.getData("London",WeatherApi.WEATHER_UNITS, WeatherApi.KEY);
 
-            @Override
-            public void onResponse(Call<CurrentWeatherModel> call, Response<CurrentWeatherModel> response) {
-                model = response.body();
-                list.add(model);
-                recyclerView.getAdapter().notifyDataSetChanged();
-                //Toast.makeText(MainActivity.this,String.valueOf(model.getWindData().getSpeed()),Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onFailure(Call<CurrentWeatherModel> call, Throwable t) {
-                Log.d("TAG", "FAIL");
-                t.getMessage();
-                Toast.makeText(MainActivity.this,"bad",Toast.LENGTH_SHORT).show();
-            }
-        });
-        */
-
-        //Toast.makeText(MainActivity.this,String.valueOf(model == null),Toast.LENGTH_SHORT).show();
+        Toast.makeText(MainActivity.this,String.valueOf(model == null),Toast.LENGTH_SHORT).show();
         if (model != null) {
             list.add(model);
             recyclerView.getAdapter().notifyDataSetChanged();
         }
-
+*/
     }
 
 
@@ -89,7 +70,13 @@ public class MainActivity extends Activity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_add) {
+            Intent intent = new Intent(this, SecondActivity.class);
+            startActivity(intent);
+            for (CurrentWeatherModel m: SecondActivity.list){
+                list.add(m);
+            }
+            recyclerView.getAdapter().notifyDataSetChanged();
             return true;
         }
 

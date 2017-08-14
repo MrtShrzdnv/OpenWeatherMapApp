@@ -14,12 +14,13 @@ import shiriyazdanov_marat.openweathermapapp.entity.CurrentWeatherModel;
  */
 
 public class CurrentWeatherService {
-    //private WeatherApi api;
-    private CurrentWeatherModel result = null;
-
+    private volatile CurrentWeatherModel result;
     public CurrentWeatherService (){
     }
 
+    public  void setResult(CurrentWeatherModel r){
+        result = r;
+    }
 
     public CurrentWeatherModel getData(String cityName, String units, String appid){
         App.getWeatherApi().getData(cityName,units,appid).enqueue(new Callback<CurrentWeatherModel>(){
@@ -28,7 +29,6 @@ public class CurrentWeatherService {
             public void onResponse(Call<CurrentWeatherModel> call, Response<CurrentWeatherModel> response) {
                 result = response.body();
             }
-
             @Override
             public void onFailure(Call<CurrentWeatherModel> call, Throwable t) {
                 Log.d("TAG", "FAIL");
