@@ -1,5 +1,8 @@
 package shiriyazdanov_marat.openweathermapapp.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -7,7 +10,7 @@ import com.google.gson.annotations.SerializedName;
  * Created by Marat_2 on 05.08.2017.
  */
 
-public class Wind {
+public class Wind implements Parcelable{
 
     @SerializedName("speed")
     @Expose
@@ -20,6 +23,23 @@ public class Wind {
         speed = s;
         deg = d;
     }
+
+    public Wind(Parcel parcel){
+        speed = parcel.readDouble();
+        deg = parcel.readInt();
+    }
+
+    public static final Creator<Wind> CREATOR = new Creator<Wind>() {
+        @Override
+        public Wind createFromParcel(Parcel in) {
+            return new Wind(in);
+        }
+
+        @Override
+        public Wind[] newArray(int size) {
+            return new Wind[size];
+        }
+    };
 
     public Double getSpeed() {
         return speed;
@@ -54,5 +74,16 @@ public class Wind {
         int result = speed.hashCode();
         result = 31 * result + deg.hashCode();
         return result;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeDouble(speed);
+        parcel.writeInt(deg);
     }
 }

@@ -1,12 +1,15 @@
 package shiriyazdanov_marat.openweathermapapp.entity;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import com.google.gson.annotations.SerializedName;
 
 /**
  * Created by Marat_2 on 28.07.2017.
  */
 
-public class CurrentWeatherModel {
+public class CurrentWeatherModel implements Parcelable {
     @SerializedName("main")
     private Main mainData;
     @SerializedName("wind")
@@ -19,6 +22,24 @@ public class CurrentWeatherModel {
         windData = w;
         name = n;
     }
+
+    public CurrentWeatherModel(Parcel parcel) {
+        mainData = parcel.readParcelable(Main.class.getClassLoader());
+        windData = parcel.readParcelable(Wind.class.getClassLoader());
+        name = parcel.readString();
+    }
+
+    public static final Creator<CurrentWeatherModel> CREATOR = new Creator<CurrentWeatherModel>() {
+        @Override
+        public CurrentWeatherModel createFromParcel(Parcel in) {
+            return new CurrentWeatherModel(in);
+        }
+
+        @Override
+        public CurrentWeatherModel[] newArray(int size) {
+            return new CurrentWeatherModel[size];
+        }
+    };
 
     public Main getMainData() {
         return mainData;
@@ -63,5 +84,17 @@ public class CurrentWeatherModel {
         result = 31 * result + windData.hashCode();
         result = 31 * result + name.hashCode();
         return result;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel parcel, int i) {
+        parcel.writeParcelable(mainData, i);
+        parcel.writeParcelable(windData, i);
+        parcel.writeString(name);
     }
 }

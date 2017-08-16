@@ -11,12 +11,14 @@ import java.util.List;
 
 import shiriyazdanov_marat.openweathermapapp.R;
 import shiriyazdanov_marat.openweathermapapp.entity.CurrentWeatherModel;
+import shiriyazdanov_marat.openweathermapapp.util.WindDegParser;
 
 /**
  * Created by Marat_2 on 07.08.2017.
  */
 
 public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHolder> {
+    private WindDegParser windDegParser = new WindDegParser();
     private List<CurrentWeatherModel> mDataSet;
     public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView cityName;
@@ -48,9 +50,10 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
         holder.cityName.setText(mDataSet.get(position).getName());
-        holder.temp.setText(String.valueOf(mDataSet.get(position).getMainData().getTemp()));
-        holder.speed.setText(String.valueOf(mDataSet.get(position).getWindData().getSpeed()));
-        holder.deg.setText(String.valueOf(mDataSet.get(position).getWindData().getDeg()));
+        holder.temp.setText(String.valueOf(mDataSet.get(position).getMainData().getTemp())+"\u00B0");
+        holder.speed.setText(String.valueOf(mDataSet.get(position).getWindData().getSpeed())+" m/s");
+        //holder.deg.setText(String.valueOf(mDataSet.get(position).getWindData().getDeg()));
+        holder.deg.setText(windDegParser.getDeg(mDataSet.get(position).getWindData().getDeg()));
     }
 
     @Override

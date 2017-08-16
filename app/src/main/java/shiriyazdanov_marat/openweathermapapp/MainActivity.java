@@ -72,14 +72,23 @@ public class MainActivity extends Activity {
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_add) {
             Intent intent = new Intent(this, SecondActivity.class);
-            startActivity(intent);
-            for (CurrentWeatherModel m: SecondActivity.list){
-                list.add(m);
-            }
-            recyclerView.getAdapter().notifyDataSetChanged();
+            startActivityForResult(intent, 1);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        if(requestCode == 1){
+            if(resultCode == Activity.RESULT_OK){
+                ArrayList<CurrentWeatherModel> result = data.getParcelableArrayListExtra("result");
+                for(CurrentWeatherModel model : result){
+                    list.add(model);
+                }
+                recyclerView.getAdapter().notifyDataSetChanged();
+            }
+        }
     }
 }
