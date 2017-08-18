@@ -2,6 +2,10 @@ package shiriyazdanov_marat.openweathermapapp.service;
 
 import android.util.Log;
 
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -14,27 +18,15 @@ import shiriyazdanov_marat.openweathermapapp.entity.CurrentWeatherModel;
  */
 
 public class CurrentWeatherService {
-    private  CurrentWeatherModel result;
-    public CurrentWeatherService (){
-    }
 
-    public  void setResult(CurrentWeatherModel r){
-        result = r;
-    }
+    public CurrentWeatherModel getData(String str) {
 
-    public CurrentWeatherModel getData(String cityName, String units, String appid){
-        App.getWeatherApi().getData(cityName,units,appid).enqueue(new Callback<CurrentWeatherModel>(){
-
-            @Override
-            public void onResponse(Call<CurrentWeatherModel> call, Response<CurrentWeatherModel> response) {
-                result = response.body();
-            }
-            @Override
-            public void onFailure(Call<CurrentWeatherModel> call, Throwable t) {
-                Log.d("TAG", "FAIL");
-                t.getMessage();
-            }
-        });
-        return result;
+        Response response = null;
+        try {
+            response = App.getWeatherApi().getData(str, WeatherApi.WEATHER_UNITS, WeatherApi.KEY).execute();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return (CurrentWeatherModel) response.body();
     }
 }

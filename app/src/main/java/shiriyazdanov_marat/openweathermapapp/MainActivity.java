@@ -3,16 +3,15 @@ package shiriyazdanov_marat.openweathermapapp;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,18 +19,19 @@ import retrofit2.Response;
 import shiriyazdanov_marat.openweathermapapp.adapter.WeatherAdapter;
 import shiriyazdanov_marat.openweathermapapp.api.WeatherApi;
 import shiriyazdanov_marat.openweathermapapp.entity.CurrentWeatherModel;
-import shiriyazdanov_marat.openweathermapapp.entity.Main;
-import shiriyazdanov_marat.openweathermapapp.entity.Wind;
 import shiriyazdanov_marat.openweathermapapp.service.CityStorage;
 import shiriyazdanov_marat.openweathermapapp.service.CurrentWeatherService;
 
 
 public class MainActivity extends Activity {
 
-    RecyclerView recyclerView;
-    List<CurrentWeatherModel> list;
-    CurrentWeatherService service;
-    CurrentWeatherModel model;
+    private RecyclerView mRecyclerView;
+    private List<CurrentWeatherModel> list;
+    private CurrentWeatherService service;
+    private CurrentWeatherModel model;
+    private List<String> cities;
+    private int flag = 0;
+    private SwipeRefreshLayout mSwipeRefresh;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -40,13 +40,22 @@ public class MainActivity extends Activity {
         CityStorage.init(MainActivity.this);
         list = new ArrayList<>();
         service = new CurrentWeatherService();
-        List<String> cities = CityStorage.getAll();
-        recyclerView = (RecyclerView) findViewById(R.id.rv);
+        cities = CityStorage.getAll();
+        mSwipeRefresh = (SwipeRefreshLayout) findViewById(R.id.rl);
+        mSwipeRefresh.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                downloadDates();
+                mSwipeRefresh.setRefreshing(false);
+            }
+
+        });
+        mRecyclerView = (RecyclerView) findViewById(R.id.rv);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(layoutManager);
+        mRecyclerView.setLayoutManager(layoutManager);
         WeatherAdapter adapter = new WeatherAdapter(list);
-        recyclerView.setAdapter(adapter);
-        downloadDates(cities);
+        mRecyclerView.setAdapter(adapter);
+        downloadDates();
     }
 
 
@@ -83,29 +92,31 @@ public class MainActivity extends Activity {
                     list.add(model);
                     CityStorage.addProperty(model.getName(),model.getName());
                 }
-                recyclerView.getAdapter().notifyDataSetChanged();
+                mRecyclerView.getAdapter().notifyDataSetChanged();
             }
         }
     }
 
-    private void downloadDates(List<String> cities){
+    private void downloadDates(){
         list.clear();
-        for(String str : cities){
-            App.getWeatherApi().getData(str,WeatherApi.WEATHER_UNITS,WeatherApi.KEY).enqueue(new Callback<CurrentWeatherModel>(){
-
+        cities = CityStorage.getAll();
+        flag = 0;
+        for (String city : cities) {
+            App.getWeatherApi().getData(city, WeatherApi.WEATHER_UNITS, WeatherApi.KEY).enqueue(new Callback<CurrentWeatherModel>() {
                 @Override
                 public void onResponse(Call<CurrentWeatherModel> call, Response<CurrentWeatherModel> response) {
-                    if (response.code() == 200){
+                    if(response.code() == 200){
                         list.add(response.body());
-                        recyclerView.getAdapter().notifyDataSetChanged();
                     }
+                    mRecyclerView.getAdapter().notifyDataSetChanged();
                 }
+
                 @Override
                 public void onFailure(Call<CurrentWeatherModel> call, Throwable t) {
-                    Log.d("TAG", "FAIL");
-                    t.getMessage();
                 }
             });
         }
+
+        mRecyclerView.getAdapter().notifyDataSetChanged();
     }
 }
