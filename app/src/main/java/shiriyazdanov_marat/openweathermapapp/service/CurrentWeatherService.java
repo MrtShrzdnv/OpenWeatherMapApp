@@ -14,7 +14,7 @@ import shiriyazdanov_marat.openweathermapapp.entity.CurrentWeatherModel;
  */
 
 public class CurrentWeatherService {
-    private volatile CurrentWeatherModel result;
+    private  CurrentWeatherModel result;
     public CurrentWeatherService (){
     }
 

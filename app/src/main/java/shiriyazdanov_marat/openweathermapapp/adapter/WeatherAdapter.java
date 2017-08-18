@@ -11,14 +11,15 @@ import java.util.List;
 
 import shiriyazdanov_marat.openweathermapapp.R;
 import shiriyazdanov_marat.openweathermapapp.entity.CurrentWeatherModel;
-import shiriyazdanov_marat.openweathermapapp.util.WindDegParser;
+import shiriyazdanov_marat.openweathermapapp.service.CityStorage;
+import shiriyazdanov_marat.openweathermapapp.util.WeatherDataParser;
 
 /**
  * Created by Marat_2 on 07.08.2017.
  */
 
 public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHolder> {
-    private WindDegParser windDegParser = new WindDegParser();
+    private WeatherDataParser parser = new WeatherDataParser();
     private List<CurrentWeatherModel> mDataSet;
     public static class ViewHolder extends RecyclerView.ViewHolder{
         TextView cityName;
@@ -48,12 +49,22 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
         holder.cityName.setText(mDataSet.get(position).getName());
-        holder.temp.setText(String.valueOf(mDataSet.get(position).getMainData().getTemp())+"\u00B0");
-        holder.speed.setText(String.valueOf(mDataSet.get(position).getWindData().getSpeed())+" m/s");
-        //holder.deg.setText(String.valueOf(mDataSet.get(position).getWindData().getDeg()));
-        holder.deg.setText(windDegParser.getDeg(mDataSet.get(position).getWindData().getDeg()));
+        holder.temp.setText(parser.getTemp(mDataSet.get(position).getMainData().getTemp()));
+        holder.speed.setText(parser.getSpeed(mDataSet.get(position).getWindData().getSpeed()));
+        holder.deg.setText(parser.getDeg(mDataSet.get(position).getWindData().getDeg()));
+
+        holder.button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                CityStorage.deleteProperty((mDataSet.get(position).getName()));
+                mDataSet.remove(position);
+                notifyItemRemoved(position);
+                notifyDataSetChanged();
+            }
+        });
+
     }
 
     @Override
@@ -62,4 +73,6 @@ public class WeatherAdapter extends RecyclerView.Adapter<WeatherAdapter.ViewHold
             return 0;
         return mDataSet.size();
     }
+
+
 }

@@ -14,14 +14,23 @@ public class Wind implements Parcelable{
 
     @SerializedName("speed")
     @Expose
-    private Double speed;
+    private Double speed = -1.0;
     @SerializedName("deg")
     @Expose
-    private Integer deg;
+    private Integer deg = -1;
 
     public Wind(Double s, int d){
         speed = s;
         deg = d;
+    }
+    public Wind(int d){
+        deg = d;
+    }
+    public Wind(Double s){
+        speed = s;
+    }
+    public Wind(){
+
     }
 
     public Wind(Parcel parcel){

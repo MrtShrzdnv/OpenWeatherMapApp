@@ -12,6 +12,7 @@ import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -21,6 +22,7 @@ import shiriyazdanov_marat.openweathermapapp.api.WeatherApi;
 import shiriyazdanov_marat.openweathermapapp.entity.CurrentWeatherModel;
 import shiriyazdanov_marat.openweathermapapp.entity.Main;
 import shiriyazdanov_marat.openweathermapapp.entity.Wind;
+import shiriyazdanov_marat.openweathermapapp.service.CityStorage;
 import shiriyazdanov_marat.openweathermapapp.service.CurrentWeatherService;
 
 
@@ -35,23 +37,16 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        CityStorage.init(MainActivity.this);
         list = new ArrayList<>();
         service = new CurrentWeatherService();
-
+        List<String> cities = CityStorage.getAll();
         recyclerView = (RecyclerView) findViewById(R.id.rv);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
         WeatherAdapter adapter = new WeatherAdapter(list);
         recyclerView.setAdapter(adapter);
-
-/*        model = service.getData("London",WeatherApi.WEATHER_UNITS, WeatherApi.KEY);
-
-        Toast.makeText(MainActivity.this,String.valueOf(model == null),Toast.LENGTH_SHORT).show();
-        if (model != null) {
-            list.add(model);
-            recyclerView.getAdapter().notifyDataSetChanged();
-        }
-*/
+        downloadDates(cities);
     }
 
 
@@ -86,9 +81,31 @@ public class MainActivity extends Activity {
                 ArrayList<CurrentWeatherModel> result = data.getParcelableArrayListExtra("result");
                 for(CurrentWeatherModel model : result){
                     list.add(model);
+                    CityStorage.addProperty(model.getName(),model.getName());
                 }
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
+        }
+    }
+
+    private void downloadDates(List<String> cities){
+        list.clear();
+        for(String str : cities){
+            App.getWeatherApi().getData(str,WeatherApi.WEATHER_UNITS,WeatherApi.KEY).enqueue(new Callback<CurrentWeatherModel>(){
+
+                @Override
+                public void onResponse(Call<CurrentWeatherModel> call, Response<CurrentWeatherModel> response) {
+                    if (response.code() == 200){
+                        list.add(response.body());
+                        recyclerView.getAdapter().notifyDataSetChanged();
+                    }
+                }
+                @Override
+                public void onFailure(Call<CurrentWeatherModel> call, Throwable t) {
+                    Log.d("TAG", "FAIL");
+                    t.getMessage();
+                }
+            });
         }
     }
 }

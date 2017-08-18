@@ -13,12 +13,15 @@ import com.google.gson.annotations.SerializedName;
 public class Main implements Parcelable {
     @SerializedName("temp")
     @Expose
-    private Double temp;
+    private Double temp = -999.9;
 
     public Main(Double t){
         temp = t;
     }
 
+    public Main(){
+
+    }
     public Main(Parcel parcel){
         temp = parcel.readDouble();
     }

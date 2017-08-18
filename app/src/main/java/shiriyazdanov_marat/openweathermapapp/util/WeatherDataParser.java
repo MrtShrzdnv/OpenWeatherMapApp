@@ -4,7 +4,7 @@ package shiriyazdanov_marat.openweathermapapp.util;
  * Created by Marat_2 on 16.08.2017.
  */
 
-public class WindDegParser {
+public class WeatherDataParser {
     public String getDeg(int i){
         if (i == 0 || i == 360)
             return "north";
@@ -38,7 +38,21 @@ public class WindDegParser {
             return "northwest";
         else if (315 < i && i < 360)
             return "north-northwest";
+        else if (i == -1)
+            return "no info";
         else
             return "error";
+    }
+    public String getSpeed(Double i){
+        if (i == -1.0)
+            return "no info";
+        else
+            return String.valueOf(i)+"m/s";
+    }
+    public String getTemp(Double i){
+        if (i == -999.9)
+            return "no info";
+        else
+            return String.valueOf(i)+"\u00B0";
     }
 }
